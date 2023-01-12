@@ -1,6 +1,8 @@
 <script lang="ts">
 	import type { Channel } from "../../helpers/types";
 	import { onMount } from "svelte";
+	import DrumkitSvg from "../../assets/icons/DrumkitSvg.svelte";
+	// import { CHANNEL_ICONS } from "../../helpers/icons";
 
 	// Props
 	export let channelNr: number;
@@ -58,7 +60,7 @@
 	</div>
 	<div>
 		<div class="bg-gray-600 text-white w-20 h-20 flex justify-center items-center mt-3 rounded">
-			ICON
+			<span class="text-4xl"> <DrumkitSvg /></span>
 		</div>
 	</div>
 	<div>
