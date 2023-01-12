@@ -1,16 +1,12 @@
 <script lang="ts">
-	import { trackNames } from "../../helpers/tracks";
+	import type { Channel } from "../../helpers/types";
 
-	import type { Gain, Player } from "tone";
-	import Channel from "./Channel.svelte";
+	import ChannelStrip from "./ChannelStrip.svelte";
 
 	// Props
 	export let handlePlay: () => void;
 	export let handleStop: () => void;
-	export let gainNodes: Gain<"gain">[];
-	export let multiPlayer: Player[];
-
-	// TODO Bundle track pairings - 10 tracks should be 5 channels
+	export let channels: Channel[];
 </script>
 
 <div class="flex flex-col items-center">
@@ -23,8 +19,8 @@
 <h2 class="bg-blue-200 flex justify-center mt-5 py-5">CHANNELS</h2>
 <div class="flex justify-center p-5 mt-5">
 	<div class="flex pl-1 py-1 bg-gray-400">
-		{#each multiPlayer as player, playerIdx}
-			<Channel channelNr={playerIdx} channel={player} gainNode={gainNodes[playerIdx]} />
+		{#each channels as channel, channelIdx}
+			<ChannelStrip channelNr={channelIdx} {channel} />
 		{/each}
 	</div>
 	<div class="flex justify-center bg-gray-400 w-64">

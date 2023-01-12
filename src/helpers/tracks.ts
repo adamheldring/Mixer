@@ -11,9 +11,11 @@ import track8 from "../assets/sounds/NOLIMITER_08_ORGAN_FX_230110.wav";
 import track9 from "../assets/sounds/NOLIMITER_09_SHAKER_FX_230110.wav";
 import track10 from "../assets/sounds/NOLIMITER_10_CLAP_FX_230110.wav";
 
+export const channelNames = ["drums", "lead", "bass", "pad", "shaker"];
+
 export const trackNames = [
-	"rhytm_drums",
-	"rhytm_beat",
+	"drums_drums",
+	"drums_beat",
 	"lead_piano",
 	"lead_synth",
 	"bass_electric",
