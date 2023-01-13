@@ -14,7 +14,7 @@ import track10 from "../assets/sounds/NOLIMITER_10_CLAP_FX_230110.wav";
 export const channelNames = ["drums", "lead", "bass", "pad", "shaker"];
 
 export const trackNames = [
-	"drums_drums",
+	"drums_drumkit",
 	"drums_beat",
 	"lead_piano",
 	"lead_synth",
@@ -22,7 +22,7 @@ export const trackNames = [
 	"bass_synth",
 	"pad_strings",
 	"pad_organ",
-	"shaker_tambourine",
+	"shaker_tamb",
 	"shaker_claps"
 ];
 

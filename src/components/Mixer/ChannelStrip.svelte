@@ -1,8 +1,7 @@
 <script lang="ts">
 	import type { Channel } from "../../helpers/types";
 	import { onMount } from "svelte";
-	import DrumkitSvg from "../../assets/icons/DrumkitSvg.svelte";
-	// import { CHANNEL_ICONS } from "../../helpers/icons";
+	import InstrumentIcon from "../InstrumentIcon/InstrumentIcon.svelte";
 
 	// Props
 	export let channelNr: number;
@@ -10,18 +9,17 @@
 
 	// State
 	let channelGain: number = 0;
+	let alternateTrack = false;
 
 	$: {
 		channelGain = channel.gainNode.gain.value;
 	}
 
 	onMount(() => {
-		channel.players.forEach((player) => {
-			player.mute = channel.isMuted;
+		channel.players.forEach((player, playerIdx) => {
+			player.mute = playerIdx === 0 ? channel.isMuted : true;
 		});
 	});
-	// State
-	let alternateTrack = false;
 
 	const handleToggleMute = () => {
 		const action = channel.isMuted ? "turnon" : "turnoff";
@@ -59,16 +57,23 @@
 		{channelNr + 1}
 	</div>
 	<div>
-		<div class="bg-gray-600 text-white w-20 h-20 flex justify-center items-center mt-3 rounded">
-			<span class="text-4xl"> <DrumkitSvg /></span>
+		<div>
+			<div class="bg-gray-600 text-white w-20 h-20 flex justify-center items-center mt-3 rounded-t">
+				<InstrumentIcon channelName={channel.name} {alternateTrack} />
+			</div>
+			<div
+				class="bg-gray-600 text-white w-20 h-5 text-xs font-extralight tracking-wide  flex justify-center items-center mt-px rounded-b"
+			>
+				{channel.instrumentNames[!alternateTrack ? 0 : 1].toUpperCase()}
+			</div>
 		</div>
 	</div>
 	<div>
 		<button
 			on:click={handleToggleAlternateTrack}
 			class="w-10 h-10 text-white shadow-xl m-5 rounded hover:bg-orange-600 focus:bg-orange-600 active:shadow-none outline-none text-sm"
-			style={`background-color: ${alternateTrack ? "#3b82f6" : "#a78bfa"}`}
-			>{alternateTrack ? "ORG" : "ALT"}</button
+			style={`background-color: ${!alternateTrack ? "#3b82f6" : "#a78bfa"}`}
+			>{!alternateTrack ? "ORG" : "ALT"}</button
 		>
 	</div>
 	<div>

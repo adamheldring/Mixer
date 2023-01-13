@@ -10,13 +10,22 @@
 	let channels: Channel[] = [];
 	const createChannels = (gainNodes: Gain<"gain">[], multiPlayer: Player[]): Channel[] =>
 		channelNames.map((channelName, idx) => {
+			const getInstrumentName = (trackName: string) => trackName.slice(trackName.indexOf("_") + 1);
 			return {
 				name: channelName,
 				gainNode: gainNodes[idx],
 				players: multiPlayer.slice(idx * 2, idx * 2 + 2),
-				isMuted: true
+				isMuted: true,
+				instrumentNames: [
+					getInstrumentName(trackNames[idx * 2]),
+					getInstrumentName(trackNames[idx * 2 + 1])
+				]
 			};
 		});
+
+	const setDefault = () => {
+		channels[0].isMuted = false;
+	};
 
 	onMount(async () => {
 		// Create gain nodes for each channel
@@ -37,6 +46,7 @@
 
 		// Combine GainNode(for channel volume) and Players (alternate channel instrument tracks) into channel objects.
 		channels = await createChannels(gainNodes, multiPlayer);
+		setDefault();
 	});
 
 	const handleStop = () => {

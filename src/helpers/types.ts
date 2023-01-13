@@ -5,4 +5,5 @@ export interface Channel {
 	gainNode: Gain<"gain">;
 	players: Player[];
 	isMuted: boolean;
+	instrumentNames: string[];
 }
