@@ -1,10 +1,26 @@
 <script lang="ts">
+	import type { Gain } from "tone";
+
 	import PlayIconSvg from "../../assets/icons/PlayIconSvg.svelte";
 	import StopIconSvg from "../../assets/icons/StopIconSvg.svelte";
 
 	export let handlePlay: () => void;
 	export let handleStop: () => void;
 	export let isPlaying: boolean;
+	export let masterGainNode: Gain;
+
+	let masterGain: number = 0;
+	$: {
+		console.log("TEST:", masterGain);
+		masterGain = masterGainNode?.gain.value;
+	}
+
+	const handleMasterGainChange = (e: any) => {
+		const newGain = e.target.value;
+		if (newGain <= 1) {
+			masterGainNode?.gain.rampTo(newGain, 0);
+		}
+	};
 </script>
 
 <div class="flex justify-center bg-gray-400 w-64">
@@ -16,17 +32,17 @@
 			</h1>
 		</div>
 		<div class="flex flex-col items-center">
-			<!-- <div class="volume-container rounded-sm mb-5">
-			<input
-				type="range"
-				class="volume-slider"
-				min={0}
-				max={1}
-				step={0.05}
-				value={0}
-				on:input={() => {}}
-			/>
-		</div> -->
+			<div class="volume-container rounded-sm mb-5">
+				<input
+					type="range"
+					class="volume-slider"
+					min={0}
+					max={1}
+					step={0.05}
+					value={masterGain}
+					on:input={handleMasterGainChange}
+				/>
+			</div>
 			<div class="flex">
 				<button
 					class={`mixer-button shadow-lg active:shadow-none bg-violet-600 hover:bg-violet-500  focus:bg-violet-600 active:bg-violet-400 text-white flex justify-center items-center ${

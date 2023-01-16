@@ -8,7 +8,9 @@
 	import Mixer from "../Mixer/Mixer.svelte";
 
 	let isPlaying = false;
+	let masterGainNode: Gain;
 	let channels: Channel[] = [];
+
 	const createChannels = (gainNodes: Gain<"gain">[], multiPlayer: Player[]): Channel[] =>
 		channelNames.map((channelName, idx) => {
 			const getInstrumentName = (trackName: string) => trackName.slice(trackName.indexOf("_") + 1);
@@ -33,9 +35,12 @@
 	};
 
 	onMount(async () => {
+		// Create master gain node
+		masterGainNode = await new Tone.Gain(0.8).toDestination();
 		// Create gain nodes for each channel
 		const createGainNodes = async () => {
-			return await trackNames.map((track) => new Tone.Gain(0.8).toDestination());
+			// return await trackNames.map((track) => new Tone.Gain(0.8).toDestination());
+			return await trackNames.map((track) => new Tone.Gain(0.8).connect(masterGainNode));
 		};
 		const gainNodes = await createGainNodes();
 
@@ -68,4 +73,4 @@
 	};
 </script>
 
-<Mixer {handlePlay} {handleStop} {isPlaying} {channels} />
+<Mixer {handlePlay} {handleStop} {isPlaying} {channels} {masterGainNode} />

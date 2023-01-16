@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Channel } from "../../helpers/types";
+	import type { Gain } from "tone";
 
 	import ChannelStrip from "./ChannelStrip.svelte";
 	import MasterSection from "./MasterSection.svelte";
@@ -9,6 +10,7 @@
 	export let handleStop: () => void;
 	export let isPlaying: boolean;
 	export let channels: Channel[];
+	export let masterGainNode: Gain;
 </script>
 
 <div class="flex justify-center p-5 mt-5">
@@ -17,5 +19,5 @@
 			<ChannelStrip channelNr={channelIdx} {channel} />
 		{/each}
 	</div>
-	<MasterSection {handlePlay} {handleStop} {isPlaying} />
+	<MasterSection {handlePlay} {handleStop} {isPlaying} {masterGainNode} />
 </div>
