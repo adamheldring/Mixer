@@ -7,6 +7,7 @@
 
 	import Mixer from "../Mixer/Mixer.svelte";
 
+	let isPlaying = false;
 	let channels: Channel[] = [];
 	const createChannels = (gainNodes: Gain<"gain">[], multiPlayer: Player[]): Channel[] =>
 		channelNames.map((channelName, idx) => {
@@ -25,6 +26,10 @@
 
 	const setDefault = () => {
 		channels[0].isMuted = false;
+		channels[1].isMuted = false;
+		channels[1].gainNode.gain.rampTo(0.7, 0);
+		channels[3].gainNode.gain.rampTo(0.4, 0);
+		channels[4].gainNode.gain.rampTo(0.6, 0);
 	};
 
 	onMount(async () => {
@@ -51,6 +56,7 @@
 
 	const handleStop = () => {
 		Tone.Transport.stop();
+		isPlaying = false;
 	};
 
 	const handlePlay = async () => {
@@ -58,7 +64,8 @@
 		console.log("Tone started...");
 
 		Tone.Transport.start();
+		isPlaying = true;
 	};
 </script>
 
-<Mixer {handlePlay} {handleStop} {channels} />
+<Mixer {handlePlay} {handleStop} {isPlaying} {channels} />
