@@ -11,9 +11,7 @@
 	export let masterGainNode: Gain;
 
 	let masterGain: number = 0;
-	$: {
-		masterGain = masterGainNode?.gain.value;
-	}
+	$: masterGain = masterGainNode?.gain.value || 0.8;
 
 	const handleMasterGainChange = (e: any) => {
 		const newGain = e.target.value;

@@ -12,9 +12,7 @@
 	let channelGain: number = 0;
 	let alternateTrack = false;
 
-	$: {
-		channelGain = channel.gainNode.gain.value;
-	}
+	$: channelGain = channel.gainNode.gain.value;
 
 	onMount(() => {
 		channel.players.forEach((player, playerIdx) => {
