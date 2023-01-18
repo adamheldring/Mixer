@@ -5,6 +5,7 @@
 
 	import ChannelStrip from "./ChannelStrip.svelte";
 	import MasterSection from "./MasterSection.svelte";
+	import VolumeSlider from "./VolumeSlider.svelte";
 	import LoaderDots from "../LoaderDots/LoaderDots.svelte";
 
 	// Props
@@ -13,10 +14,16 @@
 	export let isPlaying: boolean;
 	export let channels: Channel[];
 	export let masterGainNode: Gain;
+
+	let isLoading = true;
+	$: {
+		if (channels.length > 0) isLoading = false;
+		console.log(isLoading);
+	}
 </script>
 
 <div class="flex justify-center p-5 mt-5">
-	<div class="channels-container pl-1 py-1 bg-gray-400">
+	<div class="channels-container flex pl-1 py-1 bg-gray-400">
 		{#if channels.length > 0}
 			<div transition:fade class="flex">
 				{#each channels as channel, channelIdx}
