@@ -3,6 +3,7 @@
 
 	import PlayIconSvg from "../../assets/icons/PlayIconSvg.svelte";
 	import StopIconSvg from "../../assets/icons/StopIconSvg.svelte";
+	import VolumeSlider from "./VolumeSlider.svelte";
 
 	export let handlePlay: () => void;
 	export let handleStop: () => void;
@@ -11,7 +12,6 @@
 
 	let masterGain: number = 0;
 	$: {
-		console.log("TEST:", masterGain);
 		masterGain = masterGainNode?.gain.value;
 	}
 
@@ -19,6 +19,7 @@
 		const newGain = e.target.value;
 		if (newGain <= 1) {
 			masterGainNode?.gain.rampTo(newGain, 0);
+			masterGain = newGain;
 		}
 	};
 </script>
@@ -26,22 +27,16 @@
 <div class="flex justify-center bg-gray-400 w-64">
 	<div class="flex flex-col justify-between items-center bg-gray-300 w-full m-2 ml-1 pb-3">
 		<div>
-			<div class="h-7" />
-			<h1 class="text-gray-700 flex justify-center font-thin tracking-wider text-3xl py-5 mb-5">
+			<!-- <div class="h-7" /> -->
+			<h1 class="text-gray-700 flex justify-center font-thin tracking-wider text-3xl pt-5">
 				MIXER
 			</h1>
 		</div>
 		<div class="flex flex-col items-center">
-			<div class="volume-container rounded-sm mb-5">
-				<input
-					type="range"
-					class="volume-slider"
-					min={0}
-					max={1}
-					step={0.05}
-					value={masterGain}
-					on:input={handleMasterGainChange}
-				/>
+			<div class="mb-5 bg-gray-400 rounded w-20 h-80 relative ">
+				<div class="master-volume-container">
+					<VolumeSlider volume={masterGain} handleVolumeChange={handleMasterGainChange} />
+				</div>
 			</div>
 			<div class="flex">
 				<button
@@ -76,21 +71,13 @@
 </div>
 
 <style>
-	.volume-container {
-		background: darkgray;
-		position: relative;
-		width: 40px;
-		height: 186px;
-		/* transform: scale(1.3); */
-	}
-	.volume-slider {
-		transform: rotate(-90deg) scale(1.3);
+	.master-volume-container {
+		transform: scale(1.3);
 		position: absolute;
-		top: 85px;
-		left: -44px;
-		background: lightgreen;
-		padding: "20px";
+		top: 50px;
+		left: 21px;
 	}
+
 	.mixer-button {
 		padding: 16px 20px;
 		margin: 4px 8px;

@@ -4,6 +4,7 @@
 
 	import ChannelStrip from "./ChannelStrip.svelte";
 	import MasterSection from "./MasterSection.svelte";
+	import VolumeSlider from "./VolumeSlider.svelte";
 
 	// Props
 	export let handlePlay: () => void;

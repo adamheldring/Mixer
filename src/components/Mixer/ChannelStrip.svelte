@@ -2,6 +2,7 @@
 	import type { Channel } from "../../helpers/types";
 	import { onMount } from "svelte";
 	import InstrumentIcon from "../InstrumentIcon/InstrumentIcon.svelte";
+	import VolumeSlider from "./VolumeSlider.svelte";
 
 	// Props
 	export let channelNr: number;
@@ -38,6 +39,7 @@
 		const newGain = e.target.value;
 		if (newGain <= 1) {
 			channel.gainNode.gain.rampTo(newGain, 0);
+			channelGain = newGain;
 		}
 	};
 
@@ -87,15 +89,7 @@
 		>
 	</div>
 	<div class="volume-container rounded-sm">
-		<input
-			type="range"
-			class="volume-slider"
-			min={0}
-			max={1}
-			step={0.05}
-			value={channelGain}
-			on:input={handleGainChange}
-		/>
+		<VolumeSlider volume={channelGain} handleVolumeChange={handleGainChange} />
 	</div>
 	<div
 		class=" bg-yellow-50 text-normal-400 w-5/6 mx-3 h-7 mt-4 flex justify-center items-center font-semibold rounded-sm text-sm"
@@ -103,20 +97,3 @@
 		{channel.name.toUpperCase()}
 	</div>
 </div>
-
-<style>
-	.volume-container {
-		background: darkgray;
-		position: relative;
-		width: 40px;
-		height: 150px;
-	}
-	.volume-slider {
-		transform: rotate(-90deg);
-		position: absolute;
-		top: 66px;
-		left: -44px;
-		background: lightgreen;
-		padding: "20px";
-	}
-</style>
