@@ -28,7 +28,11 @@
 	<div
 		class="flex justify-center items-center text-sm bg-gray-400 h-10 text-gray-800 font-bold w-10"
 	>
-		{zeroBasedVolume > 0 ? "+" : ""}{zeroBasedVolume}
+		{#if zeroBasedVolume <= -80}
+			-<span class="text-lg">∞</span>
+		{:else}
+			{zeroBasedVolume > 0 ? "+" : ""}{zeroBasedVolume}
+		{/if}
 	</div>
 </div>
 
