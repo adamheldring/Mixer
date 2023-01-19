@@ -62,7 +62,7 @@
 		setDefault();
 
 		// TODO TEMP Create meters
-		masterMeter = new Tone.Meter({ normalRange: true, smoothing: 0 });
+		masterMeter = new Tone.Meter({ normalRange: true, smoothing: 0.95 });
 		masterGainNode.connect(masterMeter);
 		// let channelMeters = trackNames.map((trackName) => new Tone.Meter());
 	});

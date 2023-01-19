@@ -4,6 +4,7 @@
 	import PlayIconSvg from "../../assets/icons/PlayIconSvg.svelte";
 	import StopIconSvg from "../../assets/icons/StopIconSvg.svelte";
 	import VolumeSlider from "./VolumeSlider.svelte";
+	import MasterMeter from "../../components/GaugeMeters/MasterMeter.svelte";
 
 	export let handlePlay: () => void;
 	export let handleStop: () => void;
@@ -23,11 +24,25 @@
 	};
 
 	// Master meter logic
-	let meterValue: number | number[] = 0;
+	let meterValue: number = 0;
 	let meterReaderIntervalId: NodeJS.Timer | null = null;
+
+	const updateMeterValue = (currentValue: number | number[]) => {
+		if (typeof currentValue !== "number") return;
+		if (currentValue < 0) {
+			meterValue = 0;
+		} else if (currentValue > 0.2) {
+			meterValue = 0.2;
+		} else {
+			meterValue = Math.round(currentValue * 100) / 100;
+		}
+	};
 	$: {
+		let meterReadInterval = 20;
 		if (isPlaying) {
-			let intervalId = setInterval(() => (meterValue = masterMeter.getValue()), 100);
+			let intervalId = setInterval(() => {
+				updateMeterValue(masterMeter.getValue());
+			}, meterReadInterval);
 			meterReaderIntervalId = intervalId;
 		} else {
 			if (meterReaderIntervalId) {
@@ -46,7 +61,9 @@
 				MIXER
 			</h1>
 		</div>
-		{meterValue}
+		<div class="my-3">
+			<MasterMeter {meterValue} />
+		</div>
 		<div class="flex flex-col items-center">
 			<div class="mb-5 bg-gray-400 rounded w-20 h-80 relative ">
 				<div class="master-volume-container">
