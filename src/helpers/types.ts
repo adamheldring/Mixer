@@ -1,4 +1,4 @@
-import type { Gain, Player } from "tone";
+import type { Gain, Meter, Player } from "tone";
 
 export interface Channel {
 	name: string;

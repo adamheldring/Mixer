@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Gain } from "tone";
+	import type { Gain, Meter } from "tone";
 
 	import PlayIconSvg from "../../assets/icons/PlayIconSvg.svelte";
 	import StopIconSvg from "../../assets/icons/StopIconSvg.svelte";
@@ -9,6 +9,7 @@
 	export let handleStop: () => void;
 	export let isPlaying: boolean;
 	export let masterGainNode: Gain;
+	export let masterMeter: Meter;
 
 	let masterGain: number = 0;
 	$: masterGain = masterGainNode?.gain.value || 0.8;
@@ -20,16 +21,32 @@
 			masterGain = newGain;
 		}
 	};
+
+	// Master meter logic
+	let meterValue: number | number[] = 0;
+	let meterReaderIntervalId: NodeJS.Timer | null = null;
+	$: {
+		if (isPlaying) {
+			let intervalId = setInterval(() => (meterValue = masterMeter.getValue()), 100);
+			meterReaderIntervalId = intervalId;
+		} else {
+			if (meterReaderIntervalId) {
+				clearInterval(meterReaderIntervalId);
+				meterReaderIntervalId = null;
+				meterValue = 0;
+			}
+		}
+	}
 </script>
 
 <div class="flex justify-center bg-gray-400 w-64">
 	<div class="flex flex-col justify-between items-center bg-gray-300 w-full m-2 ml-1 pb-3">
 		<div>
-			<!-- <div class="h-7" /> -->
 			<h1 class="text-gray-700 flex justify-center font-thin tracking-wider text-3xl pt-5">
 				MIXER
 			</h1>
 		</div>
+		{meterValue}
 		<div class="flex flex-col items-center">
 			<div class="mb-5 bg-gray-400 rounded w-20 h-80 relative ">
 				<div class="master-volume-container">

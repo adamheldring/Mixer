@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Player, Gain } from "tone";
+	import type { Player, Gain, Meter } from "tone";
 	import type { Channel } from "../../helpers/types";
 	import { onMount } from "svelte";
 	import * as Tone from "tone";
@@ -10,6 +10,9 @@
 	let isPlaying = false;
 	let masterGainNode: Gain;
 	let channels: Channel[] = [];
+
+	// TODO METERS:
+	let masterMeter: Meter;
 
 	const createChannels = (gainNodes: Gain<"gain">[], multiPlayer: Player[]): Channel[] =>
 		channelNames.map((channelName, idx) => {
@@ -57,6 +60,11 @@
 		// Combine GainNode(for channel volume) and Players (alternate channel instrument tracks) into channel objects.
 		channels = await createChannels(gainNodes, multiPlayer);
 		setDefault();
+
+		// TODO TEMP Create meters
+		masterMeter = new Tone.Meter({ normalRange: true, smoothing: 0 });
+		masterGainNode.connect(masterMeter);
+		// let channelMeters = trackNames.map((trackName) => new Tone.Meter());
 	});
 
 	const handleStop = () => {
@@ -73,4 +81,4 @@
 	};
 </script>
 
-<Mixer {handlePlay} {handleStop} {isPlaying} {channels} {masterGainNode} />
+<Mixer {handlePlay} {handleStop} {isPlaying} {channels} {masterGainNode} {masterMeter} />

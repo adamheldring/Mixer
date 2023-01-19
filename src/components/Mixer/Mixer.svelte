@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Channel } from "../../helpers/types";
-	import type { Gain } from "tone";
+	import type { Gain, Meter } from "tone";
 	import { fade } from "svelte/transition";
 
 	import ChannelStrip from "./ChannelStrip.svelte";
@@ -14,12 +14,7 @@
 	export let isPlaying: boolean;
 	export let channels: Channel[];
 	export let masterGainNode: Gain;
-
-	let isLoading = true;
-	$: {
-		if (channels.length > 0) isLoading = false;
-		console.log(isLoading);
-	}
+	export let masterMeter: Meter;
 </script>
 
 <div class="flex justify-center p-5 mt-5">
@@ -33,7 +28,7 @@
 		height: 625px;
 	`}
 		/>
-		<div class="mixer-top box-shadow-3d p-5 bg-gray-600 rounded-lg relative z-10">
+		<div class="mixer-top box-shadow-3d p-5 bg-gray-600 rounded-lg relative z-10 h-full">
 			<div class="mixer-container bg-gray-400 rounded overflow-hidden h-full">
 				{#if channels.length > 0}
 					<div transition:fade class="flex">
@@ -44,7 +39,7 @@
 								{/each}
 							</div>
 						</div>
-						<MasterSection {handlePlay} {handleStop} {isPlaying} {masterGainNode} />
+						<MasterSection {handlePlay} {handleStop} {isPlaying} {masterGainNode} {masterMeter} />
 					</div>
 				{:else}
 					<div class="h-full border-4 border-gray-400">
