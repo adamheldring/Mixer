@@ -139,7 +139,7 @@
 	<div
 		on:click={altClickVolumeReset}
 		on:keypress={altClickVolumeReset}
-		class="volume-container rounded-sm border"
+		class="volume-container rounded-sm "
 	>
 		<VolumeSlider
 			volume={channelGain}
