@@ -18,17 +18,9 @@
 </script>
 
 <div class="flex justify-center p-5 mt-5">
-	<div class="relative">
-		<div
-			class="mixer-bottom absolute bg-red-400 rounded-lg z-0 shadow-2xl"
-			style={`
-		top: 20px;
-		left: 6px;
-		width: 820px;
-		height: 625px;
-	`}
-		/>
-		<div class="mixer-top box-shadow-3d p-5 bg-gray-600 rounded-lg relative z-10 h-full">
+	<div class="relative outer-wrapper">
+		<div class="mixer-bottom-wrapper absolute w-full h-full rounded-lg shadow-2xl" />
+		<div class="mixer-top-wrapper box-shadow-3d p-5 bg-gray-600 rounded-lg relative z-10 h-full">
 			<div class="mixer-container bg-gray-400 rounded overflow-hidden h-full">
 				{#if channels.length > 0}
 					<div transition:fade class="flex">
@@ -52,6 +44,14 @@
 </div>
 
 <style>
+	.outer-wrapper {
+		width: 820px;
+		height: 687px;
+	}
+	.mixer-bottom-wrapper {
+		top: 24px;
+		left: 6px;
+	}
 	.box-shadow-3d {
 		--var-shadow-color: #9ca3af;
 		box-shadow: 1px 1px 0px var(--var-shadow-color), 1px 2px 0px var(--var-shadow-color),
