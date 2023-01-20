@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Gain, Meter } from "tone";
+	import { onMount } from "svelte";
 
 	import PlayIconSvg from "../../assets/icons/PlayIconSvg.svelte";
 	import StopIconSvg from "../../assets/icons/StopIconSvg.svelte";
@@ -11,12 +12,13 @@
 	export let isPlaying: boolean;
 	export let masterGainNode: Gain;
 	export let masterMeter: Meter;
+	export let isAudioLoaded: boolean;
+	export let isAltKeyPressed: boolean;
 
 	let masterGain: number = 0;
 	$: masterGain = masterGainNode?.gain.value || 0.8;
 
-	const handleMasterGainChange = (e: any) => {
-		const newGain = e.target.value;
+	const handleMasterGainChange = (newGain: number) => {
 		if (newGain <= 1) {
 			masterGainNode?.gain.rampTo(newGain, 0);
 			masterGain = newGain;
@@ -52,6 +54,22 @@
 			}
 		}
 	}
+
+	const altClickVolumeReset = () => {
+		if (isAltKeyPressed) {
+			handleMasterGainChange(0.8);
+		}
+	};
+
+	// Set focus on Play-button when all is loaded and ready to play.
+	$: {
+		if (isAudioLoaded) {
+			const playButton = document.getElementById("play-button");
+			setTimeout(() => {
+				playButton?.focus();
+			}, 0);
+		}
+	}
 </script>
 
 <div class="flex justify-center bg-gray-400 w-64">
@@ -67,9 +85,16 @@
 		</section>
 		<section>
 			<!-- MIDDLE SECTION-->
-			<div class="bg-gray-400 rounded w-20 h-72 relative mb-2">
+			<div
+				on:click={altClickVolumeReset}
+				on:keypress={altClickVolumeReset}
+				class="bg-gray-400 rounded w-20 h-72 relative mb-2"
+			>
 				<div class="master-volume-container">
-					<VolumeSlider volume={masterGain} handleVolumeChange={handleMasterGainChange} />
+					<VolumeSlider
+						volume={masterGain}
+						handleVolumeChange={(e) => handleMasterGainChange(e.target.value)}
+					/>
 				</div>
 			</div>
 		</section>
@@ -77,6 +102,8 @@
 			<!-- BOTTOM SECTION-->
 			<div class="flex">
 				<button
+					id="play-button"
+					disabled={!isAudioLoaded}
 					class={`mixer-button shadow-lg active:shadow-none bg-violet-600 hover:bg-violet-500  focus:bg-violet-600 active:bg-violet-400 text-white flex justify-center items-center ${
 						isPlaying ? "play-button--active" : ""
 					}`}
@@ -87,6 +114,8 @@
 					</span>
 				</button>
 				<button
+					id="stop-button"
+					disabled={!isAudioLoaded}
 					class="mixer-button shadow-lg active:shadow-none bg-violet-600 hover:bg-violet-500  focus:bg-violet-600 active:bg-violet-400  text-white flex justify-center items-center"
 					on:click={handleStop}
 				>
@@ -122,9 +151,19 @@
 		width: 80px;
 		height: 80px;
 	}
+
 	.play-button--active {
 		animation: blink 1s infinite;
 		transition: background 1s;
+	}
+
+	.mixer-button {
+		transition: background-color 0.2s, opacity, 0.1s, box-shadow 0.2s;
+	}
+	.mixer-button:disabled {
+		opacity: 0.5;
+		background-color: #9ca3af;
+		box-shadow: none;
 	}
 
 	@keyframes blink {

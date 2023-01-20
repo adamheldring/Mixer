@@ -11,6 +11,8 @@
 	let masterGainNode: Gain;
 	let masterMeter: Meter;
 	let channels: Channel[] = [];
+	let isAudioLoaded = false;
+	let isInitialStart = true;
 
 	const createChannels = (
 		channelGainNodes: Gain<"gain">[],
@@ -33,8 +35,9 @@
 		});
 
 	const setDefault = () => {
+		// Channels that default ON
 		channels[0].isMuted = false;
-		channels[1].isMuted = false;
+		// Channels with individual default volumes
 		channels[1].gainNode.gain.rampTo(0.7, 0);
 		channels[3].gainNode.gain.rampTo(0.4, 0);
 		channels[4].gainNode.gain.rampTo(0.6, 0);
@@ -90,6 +93,20 @@
 		// Combine GainNode(for channel volume) and Players (alternate channel instrument tracks) into channel objects.
 		channels = await createChannels(channelGainNodes, channelMeters, multiPlayer);
 		setDefault();
+
+		// Check to set AUDIO READY flag (isAudioLoaded) when all audio tracks/player are ready
+		let checkAudioReadyIntervalId: NodeJS.Timer | null = null;
+		checkAudioReadyIntervalId = setInterval(() => {
+			const allPlayersReady = multiPlayer.every((player) => player.loaded);
+			if (allPlayersReady) {
+				isAudioLoaded = true;
+				console.log("All tracks loaded...");
+				if (checkAudioReadyIntervalId) {
+					clearInterval(checkAudioReadyIntervalId);
+					checkAudioReadyIntervalId = null;
+				}
+			}
+		}, 200);
 	});
 
 	const handleStop = () => {
@@ -98,12 +115,24 @@
 	};
 
 	const handlePlay = async () => {
-		await Tone.start();
-		console.log("Tone started...");
-
-		Tone.Transport.start();
-		isPlaying = true;
+		if (isInitialStart) {
+			await Tone.start();
+			isInitialStart = false;
+			console.log("Initial audio start...");
+		}
+		if (isAudioLoaded) {
+			Tone.Transport.start();
+			isPlaying = true;
+		}
 	};
 </script>
 
-<Mixer {handlePlay} {handleStop} {isPlaying} {channels} {masterGainNode} {masterMeter} />
+<Mixer
+	{handlePlay}
+	{handleStop}
+	{isPlaying}
+	{channels}
+	{masterGainNode}
+	{masterMeter}
+	{isAudioLoaded}
+/>

@@ -8,6 +8,8 @@
 	// Props
 	export let channelNr: number;
 	export let channel: Channel;
+	export let isPlaying: boolean;
+	export let isAltKeyPressed: boolean;
 
 	// State
 	let channelGain: number = 0;
@@ -34,8 +36,7 @@
 		}
 	};
 
-	const handleGainChange = (e: any) => {
-		const newGain = e.target.value;
+	const handleGainChange = (newGain: number) => {
 		if (newGain <= 1) {
 			channel.gainNode.gain.rampTo(newGain, 0);
 			channelGain = newGain;
@@ -65,7 +66,7 @@
 	};
 	$: {
 		let meterReadInterval = 20;
-		if (!channel.isMuted) {
+		if (isPlaying && !channel.isMuted) {
 			let intervalId = setInterval(() => {
 				updateMeterValue(channel.meter.getValue());
 			}, meterReadInterval);
@@ -78,6 +79,12 @@
 			}
 		}
 	}
+
+	const altClickVolumeReset = () => {
+		if (isAltKeyPressed) {
+			handleGainChange(0.8);
+		}
+	};
 </script>
 
 <div class="w-24 flex flex-col items-center bg-gray-300 m-1 pb-3">
@@ -117,8 +124,15 @@
 			>{channel.isMuted ? "OFF" : "ON"}</button
 		>
 	</div>
-	<div class="volume-container rounded-sm">
-		<VolumeSlider volume={channelGain} handleVolumeChange={handleGainChange} />
+	<div
+		on:click={altClickVolumeReset}
+		on:keypress={altClickVolumeReset}
+		class="volume-container rounded-sm border"
+	>
+		<VolumeSlider
+			volume={channelGain}
+			handleVolumeChange={(e) => handleGainChange(e.target.value)}
+		/>
 	</div>
 	<div
 		class=" bg-yellow-50 text-normal-400 w-5/6 mx-3 h-7 mt-4 flex justify-center items-center font-semibold rounded-sm text-sm"
