@@ -14,7 +14,6 @@
 	// State
 	let channelGain: number = 0;
 	let alternateTrack = false;
-
 	$: channelGain = channel.gainNode.gain.value;
 
 	onMount(() => {
@@ -85,6 +84,16 @@
 			handleGainChange(0.8);
 		}
 	};
+
+	const handleIconClick = () => {
+		if (isAltKeyPressed) {
+			handleMute(channel.isMuted ? "turnon" : "turnoff");
+		} else if (channel.isMuted) {
+			handleMute("turnon");
+		} else {
+			handleToggleAlternateTrack();
+		}
+	};
 </script>
 
 <div class="w-24 flex flex-col items-center bg-gray-300 m-1 pb-3">
@@ -96,16 +105,19 @@
 	<div class="w-full mt-1 p-1 px-2">
 		<ChannelMeter {meterValue} />
 	</div>
-	<div>
-		<div>
-			<div class="bg-gray-600 text-white w-20 h-20 flex justify-center items-center mt-2 rounded-t">
-				<InstrumentIcon channelName={channel.name} {alternateTrack} />
-			</div>
-			<div
-				class="bg-gray-600 text-white w-20 h-5 text-xs font-extralight tracking-wide  flex justify-center items-center mt-px rounded-b"
-			>
-				{channel.instrumentNames[!alternateTrack ? 0 : 1].toUpperCase()}
-			</div>
+	<div on:click={handleIconClick} on:keypress={handleIconClick} class="mt-2 ">
+		<div
+			class="bg-gray-600 text-white w-20 h-20 flex justify-center items-center rounded-t"
+			style={`
+				cursor: ${isAltKeyPressed ? "crosshair" : "pointer"}
+			`}
+		>
+			<InstrumentIcon channelName={channel.name} {alternateTrack} />
+		</div>
+		<div
+			class="instrument-sign bg-gray-600 text-white w-20 h-5 text-xs font-extralight tracking-wide  flex justify-center items-center mt-px rounded-b"
+		>
+			{channel.instrumentNames[!alternateTrack ? 0 : 1].toUpperCase()}
 		</div>
 	</div>
 	<div>
