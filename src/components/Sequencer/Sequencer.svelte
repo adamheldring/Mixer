@@ -9,17 +9,20 @@
 
 	let isPlaying = false;
 	let masterGainNode: Gain;
+	let masterMeter: Meter;
 	let channels: Channel[] = [];
 
-	// TODO METERS:
-	let masterMeter: Meter;
-
-	const createChannels = (gainNodes: Gain<"gain">[], multiPlayer: Player[]): Channel[] =>
+	const createChannels = (
+		channelGainNodes: Gain<"gain">[],
+		channelMeters: Meter[],
+		multiPlayer: Player[]
+	): Channel[] =>
 		channelNames.map((channelName, idx) => {
 			const getInstrumentName = (trackName: string) => trackName.slice(trackName.indexOf("_") + 1);
 			return {
 				name: channelName,
-				gainNode: gainNodes[idx],
+				gainNode: channelGainNodes[idx],
+				meter: channelMeters[idx],
 				players: multiPlayer.slice(idx * 2, idx * 2 + 2),
 				isMuted: true,
 				instrumentNames: [
@@ -38,14 +41,41 @@
 	};
 
 	onMount(async () => {
+		////////////
+		// MASTER //
+		////////////
+
 		// Create master gain node
 		masterGainNode = await new Tone.Gain(0.8).toDestination();
+
+		// Create master meter
+		masterMeter = new Tone.Meter({ normalRange: true, smoothing: 0.95 });
+		masterGainNode.connect(masterMeter);
+
+		//////////////
+		// CHANNELS //
+		//////////////
+
 		// Create gain nodes for each channel
-		const createGainNodes = async () => {
-			// return await trackNames.map((track) => new Tone.Gain(0.8).toDestination());
-			return await trackNames.map((track) => new Tone.Gain(0.8).connect(masterGainNode));
+		const createChannelGainNodes = async () => {
+			return await channelNames.map((channel) => new Tone.Gain(0.8).connect(masterGainNode));
 		};
-		const gainNodes = await createGainNodes();
+		const channelGainNodes = await createChannelGainNodes();
+
+		// Create meters for each channel
+		const createChannelMeters = async () => {
+			const meters = await channelNames.map(
+				(channel) => new Tone.Meter({ normalRange: true, smoothing: 0.95 })
+			);
+			// Connect each channel gainNode to corresponding meter
+			meters.forEach((_meter, meterIdx) => channelGainNodes[meterIdx].connect(meters[meterIdx]));
+			return meters;
+		};
+		const channelMeters = await createChannelMeters();
+
+		//////////////////////
+		// TRACKS / PLAYERS //
+		//////////////////////
 
 		// Create players for each track and connect to corresponding track
 		const players = await new Tone.Players(TRACKS);
@@ -54,17 +84,12 @@
 			const gainIdx = Math.floor(playerIdx / 2);
 			player.mute = true;
 			player.loop = true;
-			player.connect(gainNodes[gainIdx]).sync().start();
+			player.connect(channelGainNodes[gainIdx]).sync().start();
 		});
 
 		// Combine GainNode(for channel volume) and Players (alternate channel instrument tracks) into channel objects.
-		channels = await createChannels(gainNodes, multiPlayer);
+		channels = await createChannels(channelGainNodes, channelMeters, multiPlayer);
 		setDefault();
-
-		// TODO TEMP Create meters
-		masterMeter = new Tone.Meter({ normalRange: true, smoothing: 0.95 });
-		masterGainNode.connect(masterMeter);
-		// let channelMeters = trackNames.map((trackName) => new Tone.Meter());
 	});
 
 	const handleStop = () => {

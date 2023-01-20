@@ -44,13 +44,40 @@
 
 	const handleToggleAlternateTrack = () => {
 		alternateTrack = !alternateTrack;
-
-		// handleMute("turnon");
 		if (!channel.isMuted) {
 			channel.players[0].mute = alternateTrack ? true : false;
 			channel.players[1].mute = alternateTrack ? false : true;
 		}
 	};
+
+	// Channel meter logic
+	let meterValue: number = 0;
+	let meterReaderIntervalId: NodeJS.Timer | null = null;
+	const updateMeterValue = (currentValue: number | number[]) => {
+		if (typeof currentValue !== "number") return;
+		if (currentValue < 0) {
+			meterValue = 0;
+		} else if (currentValue > 0.2) {
+			meterValue = 0.2;
+		} else {
+			meterValue = Math.round(currentValue * 100) / 100;
+		}
+	};
+	$: {
+		let meterReadInterval = 20;
+		if (!channel.isMuted) {
+			let intervalId = setInterval(() => {
+				updateMeterValue(channel.meter.getValue());
+			}, meterReadInterval);
+			meterReaderIntervalId = intervalId;
+		} else {
+			if (meterReaderIntervalId) {
+				clearInterval(meterReaderIntervalId);
+				meterReaderIntervalId = null;
+				meterValue = 0;
+			}
+		}
+	}
 </script>
 
 <div class="w-24 flex flex-col items-center bg-gray-300 m-1 pb-3">
@@ -60,7 +87,7 @@
 		{channelNr + 1}
 	</div>
 	<div class="w-full mt-1 p-1 px-2">
-		<ChannelMeter meterValue={0} />
+		<ChannelMeter {meterValue} />
 	</div>
 	<div>
 		<div>
