@@ -56,20 +56,25 @@
 
 <div class="flex justify-center bg-gray-400 w-64">
 	<div class="flex flex-col justify-between items-center bg-gray-300 w-full m-2 ml-1 pb-3">
-		<div>
-			<h1 class="text-gray-700 flex justify-center font-thin tracking-wider text-3xl pt-5">
+		<section>
+			<!-- TOP SECTION -->
+			<h1 class="text-gray-700 flex justify-center font-thin tracking-wider text-3xl pt-2">
 				MIXER
 			</h1>
-		</div>
-		<div class="my-3">
-			<MasterMeter {meterValue} />
-		</div>
-		<div class="flex flex-col items-center">
-			<div class="mb-5 bg-gray-400 rounded w-20 h-80 relative ">
+			<div class="mt-5 mb-3">
+				<MasterMeter {meterValue} />
+			</div>
+		</section>
+		<section>
+			<!-- MIDDLE SECTION-->
+			<div class="bg-gray-400 rounded w-20 h-72 relative mb-2">
 				<div class="master-volume-container">
 					<VolumeSlider volume={masterGain} handleVolumeChange={handleMasterGainChange} />
 				</div>
 			</div>
+		</section>
+		<section class="flex flex-col items-center">
+			<!-- BOTTOM SECTION-->
 			<div class="flex">
 				<button
 					class={`mixer-button shadow-lg active:shadow-none bg-violet-600 hover:bg-violet-500  focus:bg-violet-600 active:bg-violet-400 text-white flex justify-center items-center ${
@@ -98,21 +103,21 @@
 			>
 				MASTER
 			</div>
-		</div>
+		</section>
 	</div>
 </div>
 
 <style>
 	.master-volume-container {
-		transform: scale(1.3);
+		transform: scale(1.2);
 		position: absolute;
-		top: 50px;
+		top: 44px;
 		left: 21px;
 	}
 
 	.mixer-button {
 		padding: 16px 20px;
-		margin: 4px 8px;
+		margin: 0px 8px;
 		border-radius: 4px;
 		width: 80px;
 		height: 80px;

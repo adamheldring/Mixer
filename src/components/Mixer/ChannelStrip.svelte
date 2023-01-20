@@ -3,6 +3,7 @@
 	import { onMount } from "svelte";
 	import InstrumentIcon from "../InstrumentIcon/InstrumentIcon.svelte";
 	import VolumeSlider from "./VolumeSlider.svelte";
+	import ChannelMeter from "../GaugeMeters/ChannelMeter.svelte";
 
 	// Props
 	export let channelNr: number;
@@ -58,9 +59,12 @@
 	>
 		{channelNr + 1}
 	</div>
+	<div class="w-full mt-1 p-1 px-2">
+		<ChannelMeter meterValue={0} />
+	</div>
 	<div>
 		<div>
-			<div class="bg-gray-600 text-white w-20 h-20 flex justify-center items-center mt-3 rounded-t">
+			<div class="bg-gray-600 text-white w-20 h-20 flex justify-center items-center mt-2 rounded-t">
 				<InstrumentIcon channelName={channel.name} {alternateTrack} />
 			</div>
 			<div
