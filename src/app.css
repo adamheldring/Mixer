@@ -2,13 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
-  	@media (max-width: 850px) {  
-  	  .app {
-  	    transform: scale(0.45);
-  	  }
-  	}
-
-	#root {
-		touch-action: none;
+@media (max-width: 850px) {  
+	.app {
+		transform: scale(0.45);
+		position: relative;
+		top: -200px
 	}
-		
+}
+
+#root {
+	touch-action: none;
+}
+
+html {
+	background: #e2e8f0;
+}
+
+
