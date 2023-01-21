@@ -3,10 +3,10 @@
 	import type { Gain, Meter } from "tone";
 	import { onMount } from "svelte";
 	import { fade } from "svelte/transition";
+	import { SyncLoader } from "svelte-loading-spinners";
 
 	import ChannelStrip from "./ChannelStrip.svelte";
 	import MasterSection from "./MasterSection.svelte";
-	import LoaderDots from "../LoaderDots/LoaderDots.svelte";
 
 	// Props
 	export let handlePlay: () => void;
@@ -66,8 +66,8 @@
 						/>
 					</div>
 				{:else}
-					<div class="h-full border-4 border-gray-400">
-						<LoaderDots />
+					<div class="h-full border-4 border-gray-400 flex justify-center items-center">
+						<SyncLoader size="100" color="#e5e7eb" unit="px" duration="1s" />
 					</div>
 				{/if}
 			</div>

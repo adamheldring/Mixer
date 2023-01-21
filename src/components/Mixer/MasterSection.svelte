@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Gain, Meter } from "tone";
-	import { onMount } from "svelte";
+	import { Circle } from "svelte-loading-spinners";
 
 	import PlayIconSvg from "../../assets/icons/PlayIconSvg.svelte";
 	import StopIconSvg from "../../assets/icons/StopIconSvg.svelte";
@@ -109,9 +109,13 @@
 					}`}
 					on:click={handlePlay}
 				>
-					<span class="text-3xl">
-						<PlayIconSvg />
-					</span>
+					{#if !isAudioLoaded}
+						<Circle size="40" color="#FFFFFF" unit="px" duration="1s" />
+					{:else}
+						<span class="text-3xl">
+							<PlayIconSvg />
+						</span>
+					{/if}
 				</button>
 				<button
 					id="stop-button"
