@@ -8,7 +8,7 @@ const config = {
 	preprocess: vitePreprocess(),
 
 	// Config for base path is necessary for gh-pages to point to repo folder,
-	// but not needed when using config that already points to the mixer folder (mixer.[domain].com)
+	// but not needed when using CNAME config that already points to the mixer folder (mixer.[domain].com)
 	kit: {
 		adapter: adapter()
 		// paths: {
