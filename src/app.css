@@ -2,4 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-  
+  	@media (max-width: 850px) {  
+  	  .app {
+  	    transform: scale(0.45);
+  	  }
+  	}

@@ -41,7 +41,7 @@
 	});
 </script>
 
-<div class="flex justify-center p-5 mt-5">
+<div class="app flex justify-center p-5 mt-5">
 	<div class="relative outer-wrapper">
 		<div class="mixer-bottom-wrapper absolute w-full h-full rounded-lg shadow-2xl" />
 		<div class="mixer-top-wrapper box-shadow-3d p-5 bg-gray-600 rounded-lg relative z-10 h-full">
