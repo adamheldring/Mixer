@@ -8,4 +8,4 @@
 
 #### LIVE AT: [https://mixer.adamheldring.com/](https://mixer.adamheldring.com/)
 
-![Screenshot](https://github.com/adamheldring/Adam-Heldring-Portfolio/blob/master/code/public/assets/mixer.jpg)
+![Screenshot](https://github.com/adamheldring/Portfolio/blob/master/src/images/projects/mixer.jpg)
